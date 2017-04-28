@@ -4,9 +4,8 @@
 
 ServerManager::ServerManager()
 {
-	if (tcp_listener.listen(50000) != sf::Socket::Done)
+	if (tcp_listener.listen(5522) != sf::Socket::Done)
 		return;
-	selector.add(tcp_listener);
 	server_is_running = true;
 }
 
@@ -19,13 +18,14 @@ ServerManager::~ServerManager()
 
 void ServerManager::run()
 {
+	selector.add(tcp_listener);
 	while (server_is_running)
 	{
 		if (selector.wait()) //czeka na dane ze wszystkich socket'ów
 		{
 			if (selector.isReady(tcp_listener)) //sprawdzamy czy s¹ jakies przychodz¹ce po³aczenia 
 			{
-				listener_is_ready();
+				add_client_to_client_list(); //dodanie klienta do
 			}
 			else //bedziemy sprawdzac który klient chce cos wys³aæ wywo³uje sie tylko wtedy, gdy do listenera nie chc¹ po³¹czyæ siê gracze
 			{
@@ -39,7 +39,15 @@ void ServerManager::run()
 	}
 }
 
-void ServerManager::listener_is_ready()
+void ServerManager::udp_server_run()
+{
+	/*while (server_is_running)
+	{
+		
+	}*/
+}
+
+void ServerManager::add_client_to_client_list()
 {
 	std::cout << "Incomming connection\n";
 	sf::TcpSocket* client = new sf::TcpSocket;
@@ -73,10 +81,25 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 		sf::Packet packet;
 		if (client_to_check.receive(packet) == sf::Socket::Done)
 		{
+			int type;
+			packet >> type;
+			PacketType packet_type = static_cast<PacketType>(type);
+			if (packet_type == PacketType::GamePacket)
+			{
+				send_packet_to_client_all_clients_expect_sender(packet, client);//wysy³a pakiet do klienta
+			}
+			else if (packet_type == PacketType::LoginPacket)
+			{
+				get_db_querry_result(packet);
+			}
 
-			send_packet_to_client_all_clients_expect_sender(packet, client);//wysy³a pakiet do klienta
 
 		}
 
 	}
+}
+
+void ServerManager::get_db_querry_result(sf::Packet packet) //w tej funkcji wpisujesz swoje zapytania czy co tam potrzebujesz
+{
+
 }
