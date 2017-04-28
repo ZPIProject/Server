@@ -79,7 +79,7 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 	if (selector.isReady(client_to_check)) //sprawdzamy który klient cos nada³
 	{
 		sf::Packet packet;
-		if (client_to_check.receive(packet) == sf::Socket::Done)
+		if (client_to_check.receive(packet) == sf::Socket::Done)//tutaj sprawdzane jest czy pakiet zosta³ poprawnie otrzymany
 		{
 			int type;
 			packet >> type;
@@ -90,7 +90,7 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 			}
 			else if (packet_type == PacketType::LoginPacket)
 			{
-				get_db_querry_result(packet);
+				get_db_querry_result(packet, client);
 			}
 
 
@@ -99,7 +99,14 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 	}
 }
 
-void ServerManager::get_db_querry_result(sf::Packet packet) //w tej funkcji wpisujesz swoje zapytania czy co tam potrzebujesz
+void ServerManager::get_db_querry_result(sf::Packet packet, sf::TcpSocket* sender) //interfejs funkcji które bedziesz tworzy³ 
+//w packet s¹ informacje o type querry
+//¿eby wyci¹gn¹æ cos z pakietu robisz packet >> zmienna musisz wiedzieæ jak wygl¹da dany pakiet ¿eby go obs³u¿yæ
 {
+	sf::Packet packet_to_send; // tworzy pakiet do wys³ania, wype³niasz ten pakiet
 
+	if (sender->send(packet_to_send) != sf::Socket::Done) // to jest wysy³anie pakietu wraz ze sprawdzaniem czy zosta³ wys³any poprawnie
+	{
+		std::cout << "Failed to send packet to: " << sender->getRemoteAddress();
+	}
 }

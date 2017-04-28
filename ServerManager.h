@@ -20,7 +20,7 @@ private:
 	bool server_is_running;
 
 	void add_client_to_client_list();
-	void get_db_querry_result(sf::Packet packet);
+	void get_db_querry_result(sf::Packet packet, sf::TcpSocket* sender);
 	void send_packet_to_client_all_clients_expect_sender(sf::Packet packet, sf::TcpSocket* sender);
 	void checking_which_client_send_data_and_processing_it(sf::TcpSocket* client);
 
