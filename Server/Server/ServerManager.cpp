@@ -95,6 +95,49 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 			{
 				send_login_info(copy_packet, client);
 			}
+			else if (packet_type == PacketType::ADD_EXP_PACKET)
+			{
+				add_exp(copy_packet, client);
+			}
+			else if (packet_type == PacketType::BUY_SKILL_PACKET)
+			{
+				buy_skill(copy_packet, client);
+			}
+			else if (packet_type == PacketType::CHAR_INFO_PACKET)
+			{
+			}
+			else if (packet_type == PacketType::CHAR_KNOWS_SKILL_PACKET)
+			{
+				send_Hero_Known_Skills(copy_packet, client);
+			}
+			else if (packet_type == PacketType::CHAR_POINTS_AVAL_PACKET)
+			{
+				send_Aval_points(copy_packet, client);
+			}
+			else if (packet_type == PacketType::DELETE_ACC_PACKET)
+			{
+				delete_Account(copy_packet, client);
+			}
+			else if (packet_type == PacketType::DELETE_CHAR_PACKET)
+			{
+				delete_Hero(copy_packet, client);
+			}
+			else if (packet_type == PacketType::LEVEL_UP_PACKET)
+			{
+				level_Up(copy_packet, client);
+			}
+			else if (packet_type == PacketType::NEW_ACC_PACKET)
+			{
+				new_Account(copy_packet, client);
+			}
+			else if (packet_type == PacketType::NEW_CHAR_PACKET)
+			{
+				new_Hero(copy_packet, client);
+			}
+			else if (packet_type == PacketType::NEW_FIGHT_PACKET)
+			{
+				new_Fight(copy_packet, client);
+			}
 
 
 		}
@@ -110,9 +153,88 @@ void ServerManager::send_packet_to_client(sf::Packet & packet, sf::TcpSocket * c
 	}
 }
 
+void ServerManager::add_exp(sf::Packet packet, sf::TcpSocket * sender)
+{
+	int type, ammount;
+	std::string nick;
+	packet >> type >> nick >> ammount;
+	send_packet_to_client(DbMan.AddExp(nick, ammount),sender);
+}
+
+void ServerManager::buy_skill(sf::Packet packet, sf::TcpSocket * sender)
+{
+	int t, id;
+	std::string nick;
+	packet >> t >> nick >> id;
+	send_packet_to_client(DbMan.buySkill(nick, id),sender);
+}
+
+void ServerManager::send_Hero_Known_Skills(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick;
+	int t;
+	packet >> t >> nick;
+	send_packet_to_client(DbMan.getCharacterSkills(nick), sender);
+}
+
+void ServerManager::send_Aval_points(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick;
+	int t;
+	packet >> t >> nick;
+	send_packet_to_client(DbMan.getCharacterAvailablePoints(nick), sender);
+}
+
+void ServerManager::delete_Account(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick;
+	int t;
+	packet >> t >> nick;
+	send_packet_to_client(DbMan.DeleteAccount(nick), sender);
+}
+
+void ServerManager::delete_Hero(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick;
+	int t;
+	packet >> t >> nick;
+	send_packet_to_client(DbMan.DeleteHero(nick), sender);
+}
+
+void ServerManager::level_Up(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick;
+	int t;
+	packet >> t >> nick;
+	send_packet_to_client(DbMan.LevelUp(nick), sender);
+}
+
+void ServerManager::new_Account(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick,pass,email;
+	int t;
+	packet >> t >> nick>>pass>>email;
+	send_packet_to_client(DbMan.insertNewAccount(nick, pass, email), sender);
+}
+
+void ServerManager::new_Hero(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string nick,login;
+	int t;
+	packet >> t >>login>> nick;
+	send_packet_to_client(DbMan.insertNewCharacter(login,nick), sender);
+}
+
+void ServerManager::new_Fight(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string winner,loser;
+	int t,duration;
+	packet >> t >> winner>>loser>>duration;
+	send_packet_to_client(DbMan.insertNewFight(winner,loser,duration), sender);
+}
+
+
 void ServerManager::send_login_info(sf::Packet packet, sf::TcpSocket* sender) 
-//w packet s¹ informacje o type querry
-//¿eby wyci¹gn¹æ cos z pakietu robisz packet >> zmienna musisz wiedzieæ jak wygl¹da dany pakiet ¿eby go obs³u¿yæ
 {
 	std::string login;
 	std::string pass;

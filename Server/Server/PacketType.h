@@ -10,8 +10,8 @@ enum class PacketType
 	NEW_CHAR_PACKET,
 	NEW_FIGHT_PACKET,
 	BUY_SKILL_PACKET,
-	LEVEL_UP_PACKET, //not implemented
-	ADD_EXP_PACKET, //not implemented
-	DELETE_ACC_PACKET, //not implemented
-	DELETE_CHAR_PACKET //not implemented
+	LEVEL_UP_PACKET,
+	ADD_EXP_PACKET, 
+	DELETE_ACC_PACKET, 
+	DELETE_CHAR_PACKET 
 };

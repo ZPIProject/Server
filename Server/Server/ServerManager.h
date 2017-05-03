@@ -25,5 +25,14 @@ private:
 	void send_packet_to_client_all_clients_expect_sender(sf::Packet packet, sf::TcpSocket* sender);
 	void checking_which_client_send_data_and_processing_it(sf::TcpSocket* client);
 	void send_packet_to_client(sf::Packet& packet, sf::TcpSocket* client);
-	
+	void add_exp(sf::Packet packet, sf::TcpSocket* sender);
+	void buy_skill(sf::Packet packet, sf::TcpSocket* sender);
+	void send_Hero_Known_Skills(sf::Packet packet, sf::TcpSocket* sender);
+	void send_Aval_points(sf::Packet packet, sf::TcpSocket* sender);
+	void delete_Account(sf::Packet packet, sf::TcpSocket* sender);
+	void delete_Hero(sf::Packet packet, sf::TcpSocket* sender);
+	void level_Up(sf::Packet packet, sf::TcpSocket* sender);
+	void new_Account(sf::Packet packet, sf::TcpSocket* sender);
+	void new_Hero(sf::Packet packet, sf::TcpSocket* sender);
+	void new_Fight(sf::Packet packet, sf::TcpSocket* sender);
 };
