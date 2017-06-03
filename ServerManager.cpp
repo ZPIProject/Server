@@ -94,7 +94,7 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 			}
 			else if (packet_type == PacketType::LOGIN_PACKET)
 			{
-				send_login_info(packet, client);
+				send_login_info(copy_packet, client);
 			}
 			else if (packet_type == PacketType::ADD_EXP_PACKET)
 			{
@@ -139,6 +139,9 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 			{
 				new_Fight(copy_packet, client);
 			}
+			else if (packet_type == PacketType::CHAR_LIST) {
+				getCharacterList(copy_packet, client);
+			}
 
 
 		}
@@ -150,7 +153,7 @@ void ServerManager::send_packet_to_client(sf::Packet & packet, sf::TcpSocket * c
 {
 	if (client->send(packet) != sf::Socket::Done) // to jest wysy�anie pakietu wraz ze sprawdzaniem czy zosta� wys�any poprawnie
 	{
-		std::cout << "Failed to send packet to: " << client->getRemoteAddress();
+		//std::cout << "Failed to send packet to: " << client->getRemoteAddress();
 	}
 }
 
@@ -232,6 +235,14 @@ void ServerManager::new_Fight(sf::Packet packet, sf::TcpSocket * sender)
 	int t,duration;
 	packet >> t >> winner>>loser>>duration;
 	send_packet_to_client(DbMan.insertNewFight(winner,loser,duration), sender);
+}
+
+void ServerManager::getCharacterList(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string AccName;
+	int t;
+	packet >> t >> AccName;
+	send_packet_to_client(DbMan.CharList(AccName), sender);
 }
 
 

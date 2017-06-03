@@ -18,11 +18,11 @@ sf::Packet DatabaseManager::getLoginInfo(std::string login, std::string pass)
 	res = stmt->executeQuery(str.c_str());
 	if (res->next()) {
 		std::cout << "getLogin zwraca true" << std::endl;
-		result << "true";
+		result << true;
 	}
 	else {
 		std::cout << "getLogin zwraca false" << std::endl;
- result << "false"; }
+ result << false; }
 	return result;
 }
 
@@ -207,4 +207,18 @@ sf::Packet DatabaseManager::DeleteHero(std::string nick)
 		std::cout << "Delete account failed:  nick= " << nick << std::endl;
 		return result << false;
 	}
+}
+
+sf::Packet DatabaseManager::CharList(std::string name)
+{
+	sf::Packet result;
+	std::string str = "SELECT nicknameC FROM Hero WHERE accountC = '" + name + "'";
+	sql::ResultSet *res;
+	res = stmt->executeQuery(str.c_str());
+	result << (int)res->rowsCount();
+	while (res->next()) {
+		result << res->getString("nicknameC");
+		std::cout<< res->getString("nicknameC");
+	}
+	return result;
 }

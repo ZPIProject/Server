@@ -27,4 +27,5 @@ public:
 	sf::Packet AddExp(std::string nick, int ammount);
 	sf::Packet DeleteAccount(std::string name);
 	sf::Packet DeleteHero(std::string nick);
+	sf::Packet CharList(std::string name);
 };

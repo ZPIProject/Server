@@ -36,4 +36,5 @@ private:
 	void new_Account(sf::Packet packet, sf::TcpSocket* sender);
 	void new_Hero(sf::Packet packet, sf::TcpSocket* sender);
 	void new_Fight(sf::Packet packet, sf::TcpSocket* sender);
+	void getCharacterList(sf::Packet packet, sf::TcpSocket* sender);
 };
