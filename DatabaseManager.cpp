@@ -11,17 +11,17 @@ DatabaseManager::DatabaseManager()
 
 sf::Packet DatabaseManager::getLoginInfo(std::string login, std::string pass)
 {
-	std::cout << "getLogin dostal: "<<login<<" "<<pass << std::endl;
+	std::cout << "LOGIN DATA RECEIVED: "<<login<<" "<<pass << std::endl;
 	sf::Packet result;
 	sql::ResultSet *res;
 	std::string str = "SELECT loginA FROM Account WHERE loginA='"+login+"' AND passwordA='"+pass+"'";
 	res = stmt->executeQuery(str.c_str());
 	if (res->next()) {
-		std::cout << "getLogin zwraca true" << std::endl;
+		std::cout << "LOGGED IN" << std::endl;
 		result << true;
 	}
 	else {
-		std::cout << "getLogin zwraca false" << std::endl;
+		std::cout << "FAILED TO LOG IN" << std::endl;
  result << false; }
 	return result;
 }
@@ -34,7 +34,7 @@ sf::Packet DatabaseManager::getCharacterSkills(std::string nazwa)
 	res = stmt->executeQuery(str.c_str());
 	result << res->rowsCount();
 	while (res->next()) {
-		result << res->getString("idSkill").c_str();
+		result << res->getInt("idSkill");
 	}
 	return result;
 }

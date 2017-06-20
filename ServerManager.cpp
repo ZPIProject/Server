@@ -4,8 +4,12 @@
 
 ServerManager::ServerManager()
 {
-	if (tcp_listener.listen(5522) != sf::Socket::Done)
+	if (tcp_listener.listen(5522) != sf::Socket::Done) 
+	{
+		std::cout << "...FAILED TO INITIALIZE SERVER..." << std::endl;
 		return;
+	}
+	std::cout << "...SERVER INITIALIZED SUCCESFULLY..." << std::endl;
 	server_is_running = true;
 		DbMan = DatabaseManager();
 
@@ -51,13 +55,13 @@ void ServerManager::udp_server_run()
 
 void ServerManager::add_client_to_client_list()
 {
-	std::cout << "Incomming connection\n";
+	std::cout << "...CONNECTION INCOMING... "<<std::endl;
 	sf::TcpSocket* client = new sf::TcpSocket;
 	if (tcp_listener.accept(*client) == sf::Socket::Done)
 	{
 		clients.push_back(client);
 		selector.add(*client);
-		std::cout << "Client " << client->getRemoteAddress() << " was added\n";
+		std::cout << "...CONNECTION FROM IP: " << client->getRemoteAddress() << " ESTABLISHED..."<<std::endl;
 	}
 }
 
@@ -69,7 +73,7 @@ void ServerManager::send_packet_to_client_all_clients_expect_sender(sf::Packet p
 		{
 			if (client->send(packet) != sf::Socket::Done)
 			{
-				std::cout << "Failed to send packet to: " << client->getRemoteAddress();
+				std::cout << "FAILED TO SEND PACKET TO : " << client->getRemoteAddress() << std::endl;
 			}
 		}
 	}
@@ -252,6 +256,7 @@ void ServerManager::send_login_info(sf::Packet packet, sf::TcpSocket* sender)
 	std::string pass;
 	int type;
 	packet >> type >> login >> pass;
-	std::cout <<"pakiet z danymi do funkcji   "<<" "<< login << " " << pass<<std::endl;
+	std::cout << "...LOGIN REQUEST FROM ADRESS: " << sender->getRemoteAddress() << std::endl;
 	send_packet_to_client(DbMan.getLoginInfo(login,pass),sender);
+
 }
