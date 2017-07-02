@@ -122,19 +122,20 @@ sf::Packet DatabaseManager::buySkill(std::string nick, int skillId)
 	res = stmt->executeQuery(str.c_str());
 	if (res->next())
 		nickid = res->getInt("idC");
+	std::cout <<"Hero has nick: " <<nickid<<std::endl;
 	
-	str = "INSERT INTO Knows VALUES ("+std::to_string(nickid)+","+std::to_string(skillId)+")";
+	str = "INSERT INTO Knows (idSkill,idC) VALUES ("+ std::to_string(skillId) +","+ std::to_string(nickid)+")";
 	try {
 		std::cout << str << std::endl;
 		stmt->execute(str.c_str());
 		std::cout << "adding Skill:  Hero= " << nickid << "  SkillId= " + skillId << std::endl;
-		str = "UPDATE Hero SET skillpointsC = skillpointsC-1 WHERE nicknameC='"+nick+"';";
+		str = " UPDATE Hero SET skillpointsC = skillpointsC-1 WHERE nicknameC='"+nick+"';";
 		stmt->execute(str.c_str());
 		return result << true;
 	}
 	catch (sql::SQLException e) {
 		std::cout << "CATCHED EXCEPTION    " << e.getErrorCode();
-		std::cout << "adding Skill failed:  Hero= " << nickid << "  SkillId= " + skillId << std::endl;
+		std::cout << " adding Skill failed:  Hero= " << nickid << "  SkillId= " + skillId << std::endl;
 		return result << false;
 	}
 }
@@ -220,5 +221,31 @@ sf::Packet DatabaseManager::CharList(std::string name)
 		result << res->getString("nicknameC");
 		std::cout<< res->getString("nicknameC");
 	}
+	return result;
+}
+
+sf::Packet DatabaseManager::getCharLevel(std::string name)
+{
+	sf::Packet result;
+	sql::ResultSet *res;
+	std::string str = "SELECT levelC FROM Hero WHERE nicknameC = '" + name + "'";
+	res = stmt->executeQuery(str.c_str());
+	if (res->next()) {
+		result << res->getInt("levelC");
+	}
+	std::cout << result << std::endl;
+	return result;
+}
+
+sf::Packet DatabaseManager::getCharExp(std::string name)
+{
+	sf::Packet result;
+	sql::ResultSet *res;
+	std::string str = "SELECT expC FROM Hero WHERE nicknameC = '" + name + "'";
+	res = stmt->executeQuery(str.c_str());
+	if (res->next()) {
+		result << res->getInt("expC");
+	}
+	std::cout << result << std::endl;
 	return result;
 }

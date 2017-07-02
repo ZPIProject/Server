@@ -28,4 +28,6 @@ public:
 	sf::Packet DeleteAccount(std::string name);
 	sf::Packet DeleteHero(std::string nick);
 	sf::Packet CharList(std::string name);
+	sf::Packet getCharLevel(std::string name);
+	sf::Packet getCharExp(std::string name);
 };

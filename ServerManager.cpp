@@ -73,7 +73,7 @@ void ServerManager::send_packet_to_client_all_clients_expect_sender(sf::Packet p
 		{
 			if (client->send(packet) != sf::Socket::Done)
 			{
-				std::cout << "FAILED TO SEND PACKET TO : " << client->getRemoteAddress() << std::endl;
+			//	std::cout << "FAILED TO SEND PACKET TO : " << client->getRemoteAddress() << std::endl;
 			}
 		}
 	}
@@ -145,6 +145,12 @@ void ServerManager::checking_which_client_send_data_and_processing_it(sf::TcpSoc
 			}
 			else if (packet_type == PacketType::CHAR_LIST) {
 				getCharacterList(copy_packet, client);
+			}
+			else if (packet_type == PacketType::GET_CHAR_LVL) {
+				getCharacterLevel(copy_packet, client);
+			}
+			else if (packet_type == PacketType::GET_CHAR_EXP) {
+				getCharacterExp(copy_packet, client);
 			}
 
 
@@ -247,6 +253,22 @@ void ServerManager::getCharacterList(sf::Packet packet, sf::TcpSocket * sender)
 	int t;
 	packet >> t >> AccName;
 	send_packet_to_client(DbMan.CharList(AccName), sender);
+}
+
+void ServerManager::getCharacterLevel(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string chName;
+	int t;
+	packet >> t >> chName;
+	send_packet_to_client(DbMan.getCharLevel(chName), sender);
+}
+
+void ServerManager::getCharacterExp(sf::Packet packet, sf::TcpSocket * sender)
+{
+	std::string chName;
+	int t;
+	packet >> t >> chName;
+	send_packet_to_client(DbMan.getCharExp(chName), sender);
 }
 
 

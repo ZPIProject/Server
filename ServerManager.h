@@ -37,4 +37,6 @@ private:
 	void new_Hero(sf::Packet packet, sf::TcpSocket* sender);
 	void new_Fight(sf::Packet packet, sf::TcpSocket* sender);
 	void getCharacterList(sf::Packet packet, sf::TcpSocket* sender);
+	void getCharacterLevel(sf::Packet packet, sf::TcpSocket* sender);
+	void getCharacterExp(sf::Packet packet, sf::TcpSocket* sender);
 };
